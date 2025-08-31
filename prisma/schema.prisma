@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Artist {
+  aid             String     @id @default(cuid())
+  email           String     @unique
+  password        String
+  name            String     @default("Unknown")
+  gender          Gender     @default(UNDEFINED)
+  type            UserType   @default(LISTENER)
+  bio             String     @default("No biography available")
+  tracks           Tracks[]
+  albums          Albums[]
+  profileImageUrl String?
+  playlist        Playlist[]
+}
+
+model Tracks {
+  tid                String     @id @default(cuid())
+  title              String
+  artist             Artist     @relation(fields: [r_aid], references: [aid])
+  r_aid              String
+  duration           Int
+  genre              Genre      @relation(fields: [genreid], references: [gid])
+  genreid            String
+  album              Albums     @relation(fields: [albumid], references: [aaid])
+  albumid            String
+  lyrics             String     @default("No lyrics available")
+  hostedDirectoryUrl String
+  playlist           Playlist[]
+}
+
+model Genre {
+  gid           String     @id @default(cuid())
+  genre         GenreType  @default(UNDEFINED)
+  tracks        Tracks[]
+  genreCoverUrl String?
+}
+
+model Albums {
+  aaid       String   @id @default(cuid())
+  title      String   @default("Unknown")
+  albumCover String?
+  tracks     Tracks[]
+  artist     Artist   @relation(fields: [artistid], references: [aid])
+  artistid   String
+}
+
+model Playlist {
+  pid           String   @id @default(cuid())
+  playlistTitle String   @default("Unnamed")
+  creator       Artist   @relation(fields: [creatorid], references: [aid])
+  creatorid     String
+  tracks        Tracks[]
+}
+
+enum UserType {
+  ARTIST
+  LISTENER
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  UNDEFINED
+}
+
+enum GenreType {
+  UNDEFINED
+  HIPHOP
+  POP
+  CLASSICAL
+}
