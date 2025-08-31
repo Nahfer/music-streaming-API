@@ -4,7 +4,7 @@ import { middleware } from "@/middleware/authentication";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { playlist_id: string } }
+  { params }: { params: Promise<{ playlist_id: string }> }
 ) {
   try {
     const authorized = await middleware(request);
@@ -12,7 +12,7 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const playlistId = decodeURIComponent(params.playlist_id);
+    const playlistId = decodeURIComponent((await params).playlist_id);
 
     const playlist = await prisma.playlist.findUnique({
       where: { pid: playlistId },
@@ -56,7 +56,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { playlist_id: string } }
+  { params }: { params: Promise<{ playlist_id: string }> }
 ) {
   try {
     const authorized = await middleware(request);
@@ -64,7 +64,7 @@ export async function PUT(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const playlistId = decodeURIComponent(params.playlist_id);
+    const playlistId = decodeURIComponent((await params).playlist_id);
     const body = await request.json();
     const { playlistTitle, trackIds } = body;
 
@@ -112,7 +112,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { playlist_id: string } }
+  { params }: { params: Promise<{ playlist_id: string }> }
 ) {
   try {
     const authorized = await middleware(request);
@@ -120,7 +120,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const playlistId = decodeURIComponent(params.playlist_id);
+    const playlistId = decodeURIComponent((await params).playlist_id);
 
     const existing = await prisma.playlist.findUnique({
       where: { pid: playlistId },

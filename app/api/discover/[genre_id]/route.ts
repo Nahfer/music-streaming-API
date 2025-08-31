@@ -4,9 +4,9 @@ import { middleware } from "@/middleware/authentication";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { genre_id: string } }
+  { params }: { params: Promise<{ genre_id: string }> }
 ) {
-  const genreId = decodeURIComponent(params.genre_id);
+  const genreId = decodeURIComponent((await params).genre_id);
 
   const authorized = await middleware(request);
   if (!authorized) {

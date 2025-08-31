@@ -4,7 +4,7 @@ import { middleware } from "@/middleware/authentication";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { artist_id: string } }
+  { params }: { params: Promise<{ artist_id: string }> }
 ) {
   try {
     const authorized = await middleware(request);
@@ -12,7 +12,7 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const artistId = decodeURIComponent(params.artist_id);
+    const artistId = decodeURIComponent((await params).artist_id);
 
     const artistProfile = await prisma.artist.findUnique({
       where: { aid: artistId },

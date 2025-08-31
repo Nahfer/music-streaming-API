@@ -4,7 +4,7 @@ import { middleware } from "@/middleware/authentication";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { album_id: string } }
+  { params }: { params: Promise<{ album_id: string }> }
 ) {
   try {
     const authorized = await middleware(request);
@@ -12,7 +12,7 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const albumId = decodeURIComponent(params.album_id);
+    const albumId = decodeURIComponent( (await params).album_id);
     const { searchParams } = new URL(request.url);
     const trackSearch = searchParams.get("track") || "";
 
