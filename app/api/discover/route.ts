@@ -21,7 +21,13 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json({ genreList }, { status: 200 });
-  } catch (error) {
+  } catch (error: unknown) {
+    // Handle malformed JSON if somehow present
+    if (error instanceof SyntaxError) {
+      console.error("Invalid JSON in request body:", (error as SyntaxError).message);
+      return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+    }
+
     console.error("Error fetching genres:", error);
     return NextResponse.json(
       { error: "Internal server error" },

@@ -17,7 +17,9 @@ export async function middleware(
   const secret = process.env.JWT_SECRET;
 
   if (!secret) {
-    throw new Error("JWT_SECRET is not defined in environment variables");
+    // Do not throw here; log and return null so callers can decide how to respond
+    console.error("JWT_SECRET is not defined in environment variables");
+    return null;
   }
 
   try {

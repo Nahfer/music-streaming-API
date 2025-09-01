@@ -32,8 +32,13 @@ export async function POST(request: NextRequest) {
     }
 
     const secret = process.env.JWT_SECRET;
-    if (!secret)
-      throw new Error("JWT_SECRET not defined in environment variables");
+    if (!secret) {
+      console.error("JWT_SECRET not defined in environment variables");
+      return NextResponse.json(
+        { error: "Server misconfiguration" },
+        { status: 500 }
+      );
+    }
 
     const token = jwt.sign(
       { name: existingUser.name, userid: existingUser.aid },
@@ -45,7 +50,13 @@ export async function POST(request: NextRequest) {
       { success: "Login successful", token },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: unknown) {
+    // If request.json() failed due to invalid JSON, return 400 instead of 500
+    if (error instanceof SyntaxError) {
+      console.error("Invalid JSON in request body:", error.message);
+      return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+    }
+
     console.error("Login error:", error);
     return NextResponse.json(
       { error: "Internal server error" },

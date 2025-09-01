@@ -36,7 +36,13 @@ export async function GET(
     });
 
     return NextResponse.json({ trackList }, { status: 200 });
-  } catch (error) {
+  } catch (error: unknown) {
+    // If request.json() failed due to invalid JSON, return 400 instead of 500
+    if (error instanceof SyntaxError) {
+      console.error("Invalid JSON in request body:", (error as SyntaxError).message);
+      return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+    }
+
     console.error("Error fetching tracks by genre:", error);
     return NextResponse.json(
       { error: "Internal server error" },
