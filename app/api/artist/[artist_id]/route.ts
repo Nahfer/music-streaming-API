@@ -30,6 +30,7 @@ export async function GET(
     const artistAlbums = await prisma.albums.findMany({
       where: { artistid: artistId },
       select: {
+        aaid: true,
         title: true,
         albumCover: true,
       },

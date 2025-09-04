@@ -17,6 +17,7 @@ export async function GET(request: NextRequest) {
         ? { name: { contains: artistSearch, mode: "insensitive" } }
         : {},
       select: {
+        aid: true,
         name: true,
         profileImageUrl: true,
       },

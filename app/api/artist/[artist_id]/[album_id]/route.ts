@@ -24,6 +24,7 @@ export async function GET(
         }),
       },
       select: {
+        tid: true,
         title: true,
         artist: { select: { name: true } },
         duration: true,
@@ -51,7 +52,7 @@ export async function GET(
 
     console.error("Error fetching album tracks:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: (error instanceof Error) ? error.message : "Internal server error" },
       { status: 500 }
     );
   }

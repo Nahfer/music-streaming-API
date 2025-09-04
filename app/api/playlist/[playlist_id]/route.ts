@@ -45,10 +45,10 @@ export async function GET(
     };
 
     return NextResponse.json({ playlist: playlistWithCount }, { status: 200 });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error fetching playlist tracks:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: (error instanceof Error) ? error.message : "Internal server error" },
       { status: 500 }
     );
   }
@@ -101,10 +101,10 @@ export async function PUT(
     };
 
     return NextResponse.json({ playlist: playlistWithCount }, { status: 200 });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error updating playlist:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: (error instanceof Error) ? error.message : "Internal server error" },
       { status: 500 }
     );
   }
@@ -142,10 +142,10 @@ export async function DELETE(
       { success: "Playlist deleted successfully" },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error deleting playlist:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: (error instanceof Error) ? error.message : "Internal server error" },
       { status: 500 }
     );
   }

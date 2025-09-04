@@ -18,6 +18,7 @@ export async function GET(request: NextRequest) {
         playlistTitle: true,
         tracks: {
           select: {
+            tid: true,
             title: true,
             artist: { select: { name: true } },
             genre: { select: { genre: true } },
@@ -44,7 +45,7 @@ export async function GET(request: NextRequest) {
 
     console.error("Error fetching user playlists:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: (error instanceof Error) ? error.message : "Internal server error" },
       { status: 500 }
     );
   }
@@ -98,7 +99,7 @@ export async function POST(request: NextRequest) {
 
     console.error("Error creating playlist:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: (error instanceof Error) ? error.message : "Internal server error" },
       { status: 500 }
     );
   }
