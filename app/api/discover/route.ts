@@ -12,6 +12,7 @@ export async function GET(request: NextRequest) {
 
     const genreList = await prisma.genre.findMany({
       select: {
+        gid: true,
         genre: true,
         genreCoverUrl: true,
       },
