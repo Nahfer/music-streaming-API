@@ -29,19 +29,7 @@ export async function GET(request: NextRequest) {
             albumCover: true,
           },
         },
-        tracks: {
-          select: {
-            tid: true,
-            title: true,
-            hostedDirectoryUrl: true,
-            album: {
-              select: {
-                aaid: true,
-                albumCover: true,
-              }
-            }
-          },
-        },
+        // removed `tracks` from the profile response per UI request
       },
     });
 
