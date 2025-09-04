@@ -7,7 +7,7 @@ export const registerSchema = z.object({
   gender: z.enum(["MALE", "FEMALE", "UNDEFINED"]).optional(),
   type: z.enum(["ARTIST", "LISTENER"]).optional(),
   bio: z.string().optional(),
-  profileImageUrl: z.string().url("Invalid URL").optional(),
+  profileImageUrl: z.string().optional(),
 });
 
 export const loginSchema = z.object({
@@ -27,16 +27,16 @@ export const trackSchema = z.object({
   genreid: z.string().cuid(),
   albumid: z.string().cuid(),
   lyrics: z.string().optional(),
-  hostedDirectoryUrl: z.string().url("Invalid URL"),
+  hostedDirectoryUrl: z.string()
 });
 
 export const albumSchema = z.object({
   title: z.string().min(1, "Album title cannot be empty"),
-  albumCover: z.string().url("Invalid URL").optional(),
+  albumCover: z.string().optional(),
   artistid: z.string().cuid(),
 });
 
 export const genreSchema = z.object({
   genre: z.enum(["UNDEFINED", "HIPHOP", "POP", "CLASSICAL"]).optional(),
-  genreCoverUrl: z.string().url("Invalid URL").optional(),
+  genreCoverUrl: z.string().optional(),
 });
