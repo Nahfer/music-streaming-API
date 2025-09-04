@@ -26,6 +26,7 @@ export async function GET(
             artist: { select: { name: true } },
             genre: { select: { genre: true } },
             hostedDirectoryUrl: true,
+            album: { select: { aaid: true, albumCover: true } }
           },
           orderBy: { title: "asc" },
         },

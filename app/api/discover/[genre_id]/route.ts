@@ -32,6 +32,12 @@ export async function GET(
         genre: { select: { genre: true } },
         lyrics: true,
         hostedDirectoryUrl: true,
+        album: {
+          select: {
+            aaid: true,
+            albumCover: true,
+          },
+        },
       },
       orderBy: [{ title: "asc" }],
     });
