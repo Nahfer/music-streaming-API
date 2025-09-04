@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { playlistTitle, trackIds } = body;
 
-    if (!playlistTitle || !Array.isArray(trackIds) || trackIds.length === 0) {
+    if (!playlistTitle || !Array.isArray(trackIds)) {
       return NextResponse.json(
         { error: "playlistTitle and non-empty trackIds are required" },
         { status: 400 }
