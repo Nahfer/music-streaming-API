@@ -15,15 +15,18 @@ export async function GET(request: NextRequest) {
         select: { lyrics: true, title: true, artist: { select: { name: true } } },
       });
 
-      if (track && track.lyrics) {
-        return NextResponse.json({ lyrics: track.lyrics, title: track.title, artist: track.artist?.name ?? null }, { status: 200 });
+      if (track) {
+        return NextResponse.json({ lyrics: track.lyrics ?? null, title: track.title, artist: track.artist?.name ?? null }, { status: 200 });
       }
-      return NextResponse.json({ error: 'Lyrics not found' }, { status: 404 });
+
+      // return 200 with a parsable body rather than a 404 with an empty response
+      return NextResponse.json({ lyrics: null, error: 'Lyrics not found' }, { status: 200 });
     }
 
     // Otherwise try to find by title and optional artist name
     if (!title) {
-      return NextResponse.json({ error: 'Missing title parameter' }, { status: 400 });
+      // return 200 with error to keep frontend parsing simple
+      return NextResponse.json({ lyrics: null, error: 'Missing title parameter' }, { status: 200 });
     }
 
     const whereClause: Record<string, unknown> = {
@@ -41,13 +44,13 @@ export async function GET(request: NextRequest) {
       orderBy: { title: 'asc' },
     });
 
-    if (track && track.lyrics) {
-      return NextResponse.json({ lyrics: track.lyrics, title: track.title, artist: track.artist?.name ?? null }, { status: 200 });
+    if (track) {
+      return NextResponse.json({ lyrics: track.lyrics ?? null, title: track.title, artist: track.artist?.name ?? null }, { status: 200 });
     }
 
-    return NextResponse.json({ error: 'Lyrics not found' }, { status: 404 });
+    return NextResponse.json({ lyrics: null, error: 'Lyrics not found' }, { status: 200 });
   } catch (error: unknown) {
     console.error('Error fetching lyrics:', error);
-    return NextResponse.json({ error: error instanceof Error ? error.message : 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ lyrics: null, error: error instanceof Error ? error.message : 'Internal server error' }, { status: 200 });
   }
 }
