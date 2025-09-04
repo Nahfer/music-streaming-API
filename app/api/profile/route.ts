@@ -34,6 +34,12 @@ export async function GET(request: NextRequest) {
             tid: true,
             title: true,
             hostedDirectoryUrl: true,
+            album: {
+              select: {
+                aaid: true,
+                albumCover: true,
+              }
+            }
           },
         },
       },

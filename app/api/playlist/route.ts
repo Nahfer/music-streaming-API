@@ -21,6 +21,12 @@ export async function GET(request: NextRequest) {
             tid: true,
             title: true,
             artist: { select: { name: true } },
+            album: {
+              select: {
+                aaid: true,
+                albumCover: true,
+              }
+            },
             genre: { select: { genre: true } },
             duration: true,
             hostedDirectoryUrl: true,
