@@ -1,36 +1,99 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# 🎵 Music Streaming API (Backend)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This is the **backend service** of the Music Streaming App.  
+It is built with **Next.js API Routes**, **Prisma**, and **Supabase** for Postgres database + object storage.  
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The backend provides REST API endpoints for artists, albums, playlists, authentication, profile, search, and discovery.  
+It also handles authentication (JWT + bcrypt) and integrates with Supabase storage for media files.  
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## ⚡ Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Framework:** Next.js (API routes)  
+- **Database:** Supabase Postgres  
+- **ORM:** Prisma  
+- **Storage:** Supabase Storage (audio, images, avatars)  
+- **Auth:** JWT + bcrypt  
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 📂 Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+music-streaming-api/
+├── app/api/ # API routes (artist, auth, discover, lyrics, playlist, profile, search)
+├── lib/prisma.ts # Prisma client
+├── prisma/schema.prisma # Database schema
+└── middleware/ # Authentication & validation middleware
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+yaml
+Copy code
+
+---
+
+## 🗄️ Environment Variables
+
+Create a `.env` file in the project root with:
+
+```env
+# Supabase Database (connection pooling)
+DATABASE_URL="postgresql://USER:PASSWORD@aws-1-eu-central-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+
+# Direct connection for Prisma migrations
+DIRECT_URL="postgresql://USER:PASSWORD@aws-1-eu-central-1.pooler.supabase.com:5432/postgres"
+
+# JWT secret for auth
+JWT_SECRET="your-secret-key"
+🛠️ Local Development
+1. Install dependencies
+bash
+Copy code
+cd music-streaming-api
+npm install
+2. Setup environment
+Create .env with the required variables above.
+
+3. Run database migrations
+bash
+Copy code
+npx prisma generate
+npx prisma db push        # or: npx prisma migrate deploy
+4. Start development server
+bash
+Copy code
+npm run dev
+Backend will start on http://localhost:3000 by default.
+(If running alongside the frontend, you may want to use another port like 3001.)
+
+📌 API Endpoints
+Endpoint	Method	Description
+/api/auth/register	POST	Register a new user
+/api/auth/login	POST	Login & receive JWT
+/api/artist	GET	List artists
+/api/artist/[artist_id]	GET	Artist details
+/api/artist/[artist_id]/[album_id]	GET	Album details
+/api/discover	GET	Discovery home
+/api/discover/[genre_id]	GET	Discover by genre
+/api/lyrics	GET	Fetch lyrics
+/api/playlist	GET/POST	Manage playlists
+/api/playlist/[playlist_id]	GET	Playlist details
+/api/profile	GET	User profile (protected)
+/api/search	GET	Search across resources
+
+🚀 Deployment
+Backend is deployed on Vercel.
+
+Use Vercel dashboard to set environment variables securely.
+
+Prisma migrations should be run before deploying.
+
+🔮 Notes
+Configure Supabase RLS policies for database security.
+
+Set proper bucket permissions for media uploads.
+
+For production, ensure JWT_SECRET is strong and not checked into version control.
