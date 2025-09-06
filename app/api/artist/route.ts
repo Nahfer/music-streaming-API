@@ -13,9 +13,10 @@ export async function GET(request: NextRequest) {
     const artistSearch = searchParams.get("artist") || "";
 
     const artistList = await prisma.artist.findMany({
-      where: artistSearch
-        ? { name: { contains: artistSearch, mode: "insensitive" } }
-        : {},
+      where: {
+        type: 'ARTIST',
+        ...(artistSearch ? { name: { contains: artistSearch, mode: 'insensitive' } } : {}),
+      },
       select: {
         aid: true,
         name: true,
